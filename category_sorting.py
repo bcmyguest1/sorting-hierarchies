@@ -90,7 +90,7 @@ def sort_categories_for_insert(categories: str) -> str:
     return json.dumps(categories_in_insertion_order)
 
 
-if __name__ == "__main__":
+def main():
     """
     Simply for testing manually
     """
@@ -100,10 +100,14 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     print(args.category_input)
-    categories = args.category_input
+    input_categories = args.category_input
 
-    print(json.dumps(json.loads(categories), indent=4))
+    print(json.dumps(json.loads(input_categories), indent=4))
 
-    categories_in_insertion_order: str = sort_categories_for_insert(categories)
+    output_categories: str = sort_categories_for_insert(input_categories)
 
-    print(json.dumps(json.loads(categories_in_insertion_order), indent=4))
+    print(json.dumps(json.loads(output_categories), indent=4))
+
+
+if __name__ == "__main__":
+    main()
