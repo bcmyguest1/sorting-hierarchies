@@ -18,37 +18,39 @@ class Node:
         return f"Data: {self.data} - children: {self.children}"
 
 
-def build_tree_from_list(categories: List[Dict]) -> Node:
+def build_tree_from_list(items: List[Dict], id_property_name: str = "id",
+                         parent_property_name: str = "parent_id") -> Node:
     """
-
-    :param categories: list of dicts containing "id" and "parent_id" fields
+    :param parent_property_name: name of key in dict that refers to id of the item
+    :param id_property_name: name of the key in dict that refers to the parent of the item by id
+    :param items: list of dicts containing id_property_name and parent_property_name" fields
     :return: root node
     """
     lookup: Dict[int, Node] = {}
     root_node: Node = None
 
-    for category in categories:
-        if category["id"] in lookup:
+    for item in items:
+        if item[id_property_name] in lookup:
             # if we have seen the node before, it means that this was a parent of a previous node
             # don't create a new node here because it will already have children associated with it
-            node = lookup[category["id"]]
-            node.data = category
+            node = lookup[item[id_property_name]]
+            node.data = item
         else:
             # we have never seen this node
-            node = Node(category)
-            lookup[category["id"]] = node
+            node = Node(item)
+            lookup[item[id_property_name]] = node
 
-        if category["parent_id"] is None:
+        if item[parent_property_name] is None:
             root_node = node
         else:
             parent_node: Node
-            if category["parent_id"] not in lookup:
+            if item[parent_property_name] not in lookup:
                 # have not seen the parent before
                 parent_node = Node()
-                lookup[category["parent_id"]] = parent_node
+                lookup[item[parent_property_name]] = parent_node
             else:
                 # have seen the parent before
-                parent_node = lookup[category["parent_id"]]
+                parent_node = lookup[item[parent_property_name]]
             # add children to the parent node
             parent_node.children.append(node)
             node.parent = parent_node
